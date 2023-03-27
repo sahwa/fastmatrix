@@ -7,28 +7,27 @@
 
 #define MAXBUFSIZE  ((int) 1e6)
 
-Eigen::MatrixXd readMatrix();
+Eigen::MatrixXd readMatrix(const char *filename);
 
 int main() {
  
-    //Eigen::Matrix2d total(10, 10);
-    
-    Eigen::MatrixXd test = readMatrix();     
+    Eigen::MatrixXd test = readMatrix("test.txt");     
 
     std::cout << "Success!\n";
 
     return 0;
 }
 
-Eigen::MatrixXd readMatrix() {
+Eigen::MatrixXd readMatrix(const char *filename) {
     
     int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
 
     // Read numbers from file into buffer.
     
-    std::ifstream infile ("text.txt");
-    
+    std::ifstream infile;
+    infile.open(filename);
+
     if(!infile.is_open()) {
         std::cerr << "file doesn't exist\n";
         std::exit;
@@ -38,9 +37,9 @@ Eigen::MatrixXd readMatrix() {
     }
 
     while (!infile.eof())  {
+        
         std::string line;
         std::getline(infile, line);
-
         std::cout << line << std::endl;
 
         int temp_cols = 0;
@@ -62,8 +61,6 @@ Eigen::MatrixXd readMatrix() {
 
     rows--;
 
-    // Populate matrix with numbers.
-    
     Eigen::MatrixXd result(rows,cols);
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
