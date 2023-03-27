@@ -5,13 +5,21 @@
 
 #include "/home/samm/projects/fastmatrix/include/eigen/Eigen/Dense"
 
-#define MAXBUFSIZE  ((int) 1e6)
+#define MAXBUFSIZE  ((int) 1e7)
 
 Eigen::MatrixXd readMatrix(const char *filename);
 
 int main() {
  
     Eigen::MatrixXd test = readMatrix("test.txt");     
+    Eigen::MatrixXd test2 = readMatrix("test2.txt");
+
+    std::cout << "test has " << test.rows() << " rows and " << test.cols() << " cols" << std::endl;
+    std::cout << "test has " << test2.rows() << " rows and " << test2.cols() << " cols" << std::endl;
+
+    Eigen::MatrixXd output = test + test2;
+    
+    // std::cout << output << std::endl;
 
     std::cout << "Success!\n";
 
@@ -23,8 +31,6 @@ Eigen::MatrixXd readMatrix(const char *filename) {
     int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
 
-    // Read numbers from file into buffer.
-    
     std::ifstream infile;
     infile.open(filename);
 
@@ -40,7 +46,7 @@ Eigen::MatrixXd readMatrix(const char *filename) {
         
         std::string line;
         std::getline(infile, line);
-        std::cout << line << std::endl;
+        // std::cout << line << std::endl;
 
         int temp_cols = 0;
         std::stringstream stream(line);
