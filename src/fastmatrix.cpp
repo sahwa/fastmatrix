@@ -10,6 +10,7 @@
 #define MAXBUFSIZE  ((int) 1e7)
 
 Eigen::MatrixXd readMatrix(const char *filename);
+std::vector<double> split_string_to_vector(std::string original, char separator);
 
 int main(int argc, char *argv[]) {
     
@@ -35,8 +36,13 @@ int main(int argc, char *argv[]) {
 
         cmd.parse(argc, argv);
 
-        std::string name = chromosomesToAnalyseArg.getValue();
+        std::string chromosomesToAnalyseString = chromosomesToAnalyseArg.getValue();
         std::string output = outputArg.getValue();
+       
+        // get vector of chromosome names 
+        std::vector chromosomesToAnalyseVector = split_string_to_vector(chromosomesToAnalyseString, ',');
+        
+
 
 
     } catch (TCLAP::ArgException &e)
@@ -106,3 +112,25 @@ Eigen::MatrixXd readMatrix(const char *filename) {
 
     return result;
 };
+
+std::vector<double> split_string_to_vector(std::string original, char separator) {
+    
+    std::vector<std::string> results;
+    std::string::const_iterator start = original.begin();
+    std::string::const_iterator end = original.end();
+    std::string::const_iterator next = std::find( start, end, separator );
+    while (next != end) {
+        results.push_back(std::string(start, next));
+        start = next + 1;
+        next = std::find(start, end, separator);
+    }
+    results.push_back(std::string(start, next));
+
+    std::vector<double> results_double(results.size());
+    std::transform(results.begin(), results.end(), results_double.begin(), [](const std::string& val) {
+        return std::stod(val);
+    });
+    
+    return results_double;
+}
+
