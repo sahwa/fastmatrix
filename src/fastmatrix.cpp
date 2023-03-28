@@ -5,12 +5,8 @@
 #include <vector>
 
 #include "eigen/Eigen/Dense"
+#include "fastmatrix.h"
 #include "tclap/CmdLine.h"
-
-#define MAXBUFSIZE ((int)1e7)
-
-Eigen::MatrixXd readMatrix(const char *filename);
-std::vector<std::string> split_string_to_vector(std::string original, char separator);
 
 int main(int argc, char *argv[]) {
 
@@ -50,33 +46,57 @@ int main(int argc, char *argv[]) {
 
     std::vector chromosomesToAnalyseVector = split_string_to_vector(chromosomesToAnalyseString, ',');
 
-    for (std::string i : chromosomesToAnalyseVector) {
-      std::string infile = prefix + '.' + i + '.' + filetype;
+    // run some checks here //
 
-      std::cout << infile << "\n";
+    int n_chr = chromosomesToAnalyseVector.size();
+
+    if (n_chr == 1) {
+      std::cerr << "You have only supplied a single chromosome! Exiting...\n";
+      return 0;
+    }
+
+    std::cout << "Processing " << n_chr << " chromosomes\n";
+
+    // now we want to read in the first file and use that as a base //
+
+    std::string firstFilePath = prefix + chromosomesToAnalyseVector[0] + '.' + filetype;
+    Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
+    int ff_rows = firstFile.rows();
+    int ff_cols = firstFile.cols();
+
+    // remove first element from the vector - we don't need any more
+    chromosomesToAnalyseVector.erase(chromosomesToAnalyseVector.begin());
+
+    for (std::string i : chromosomesToAnalyseVector) {
+      std::string infile = prefix + i + '.' + filetype;
+      std::cout << "Processing infile: " << infile << "\n";
+
+      Eigen::MatrixXd current = readMatrix(infile);
+
+      int current_rows = current.rows();
+      int current_cols = current.cols();
+
+      if (ff_rows != current_rows) {
+        std::cout << "Current file has wrong number of rows! Exiting\n";
+        return 0;
+      }
+
+      if (ff_cols != current_cols) {
+        std::cout << "Current file has wrong number of cols! Exiting\n";
+        return 0;
+      }
     }
 
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
   }
 
-  // Eigen::MatrixXd test = readMatrix("test.txt");
-  // Eigen::MatrixXd test2 = readMatrix("test2.txt");
-
-  // std::cout << "test has " << test.rows() << " rows and " << test.cols() << "
-  // cols" << std::endl; std::cout << "test has " << test2.rows() << " rows and
-  // " << test2.cols() << " cols" << std::endl;
-
-  // Eigen::MatrixXd output = test + test2;
-
-  // std::cout << output << std::endl;
-
   std::cout << "Success!\n";
 
   return 0;
 }
 
-Eigen::MatrixXd readMatrix(const char *filename) {
+Eigen::MatrixXd readMatrix(std::string filename) {
 
   int cols = 0, rows = 0;
   double buff[MAXBUFSIZE];
@@ -136,12 +156,6 @@ std::vector<std::string> split_string_to_vector(std::string original, char separ
     next = std::find(start, end, separator);
   }
   results.push_back(std::string(start, next));
-
-  // std::vector<double> results_double(results.size());
-  // std::transform(results.begin(), results.end(), results_double.begin(),
-  // [](const std::string& val) {
-  //     return std::stod(val);
-  // });
 
   return results;
 }
