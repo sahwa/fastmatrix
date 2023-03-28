@@ -85,7 +85,15 @@ int main(int argc, char *argv[]) {
         std::cout << "Current file has wrong number of cols! Exiting\n";
         return 0;
       }
+
+      firstFile += current;
+
     }
+
+    std::cout << "Finished summing matrices\n";
+    
+    writeMatrixOutput(firstFile, output);
+
 
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
@@ -150,12 +158,30 @@ std::vector<std::string> split_string_to_vector(std::string original, char separ
   std::string::const_iterator start = original.begin();
   std::string::const_iterator end = original.end();
   std::string::const_iterator next = std::find(start, end, separator);
+
   while (next != end) {
     results.push_back(std::string(start, next));
     start = next + 1;
     next = std::find(start, end, separator);
   }
+
   results.push_back(std::string(start, next));
 
   return results;
+}
+
+
+int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
+
+  std::ofstream file(filename);
+
+  if (!file.is_open()) {
+    std::cout << "Cannot open output file connection\n";
+    return 0;
+  }
+
+  file << "Writing output to file\n" << MatrixOutput << '\n';
+  
+  return 0;
+
 }
