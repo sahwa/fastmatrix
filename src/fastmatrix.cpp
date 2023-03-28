@@ -87,13 +87,11 @@ int main(int argc, char *argv[]) {
       }
 
       firstFile += current;
-
     }
 
     std::cout << "Finished summing matrices\n";
-    
-    writeMatrixOutput(firstFile, output);
 
+    writeMatrixOutput(firstFile, output);
 
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
@@ -170,7 +168,6 @@ std::vector<std::string> split_string_to_vector(std::string original, char separ
   return results;
 }
 
-
 int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
 
   std::ofstream file(filename);
@@ -181,7 +178,6 @@ int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
   }
 
   file << "Writing output to file\n" << MatrixOutput << '\n';
-  
-  return 0;
 
+  return 0;
 }
