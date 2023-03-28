@@ -16,13 +16,29 @@ int main(int argc, char *argv[]) {
     // parse command line args 
     
     try {
-        TCLAP::CmdLine cmd("Command description message", ' ', "0.9");
-        TCLAP::ValueArg<std::string> nameArg("n","name","Name to print",true,"homer","string");
-        cmd.add(nameArg);
-        TCLAP::SwitchArg reverseSwitch("r","reverse","Print name backwards", cmd, false);
+        TCLAP::CmdLine cmd("Command description message", ' ', "0.1");
+        
+        TCLAP::ValueArg<std::string> chromosomesToAnalyseArg("c", "chromosomes", "comma seperated list of chromosomes you want to analyse",true,"homer","string");
+        cmd.add(chromosomesToAnalyseArg);
+        
+        TCLAP::ValueArg<std::string> prefixArg("p", "prefix", "prefix of filenames you want to analuse", true,"homer","string");
+        cmd.add(prefixArg);
+
+        TCLAP::ValueArg<std::string> outputArg("o", "output", "Full output file name - no extension will be added", true, "homer", "string");
+        cmd.add(outputArg);
+        
+        TCLAP::ValueArg<std::string> fileType("f", "filetype", "File type - e.g. chunkcounts or chunklengths - program will automatically detect gzipped files", true, "homer", "string");
+
+
+        //TCLAP::SwitchArg normaliseSwitch("a","normalise","normalise the copying matrix before printing (i.e. divide each row by its sum", cmd, false);
+        //cmd.add(normaliseSwitch);
+
         cmd.parse(argc, argv);
-        std::string name = nameArg.getValue();
-        bool reverseName = reverseSwitch.getValue();
+
+        std::string name = chromosomesToAnalyseArg.getValue();
+        std::string output = outputArg.getValue();
+
+
     } catch (TCLAP::ArgException &e)
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
 
