@@ -1,140 +1,147 @@
-#include <iostream>
-#include <vector>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <string_view>
+#include <vector>
 
-#include "tclap/CmdLine.h"
 #include "eigen/Eigen/Dense"
+#include "tclap/CmdLine.h"
 
-#define MAXBUFSIZE  ((int) 1e7)
+#define MAXBUFSIZE ((int)1e7)
 
 Eigen::MatrixXd readMatrix(const char *filename);
 std::vector<std::string> split_string_to_vector(std::string original, char separator);
 
 int main(int argc, char *argv[]) {
-    
-    // parse command line args 
-    
-    try {
-        TCLAP::CmdLine cmd("Command description message", ' ', "0.1");
-        
-        TCLAP::ValueArg<std::string> chromosomesToAnalyseArg("c", "chromosomes", "comma seperated list of chromosomes you want to analyse",true,"homer","string");
-        cmd.add(chromosomesToAnalyseArg);
-        
-        TCLAP::ValueArg<std::string> prefixArg("p", "prefix", "prefix of filenames you want to analuse", true,"homer","string");
-        cmd.add(prefixArg);
 
-        TCLAP::ValueArg<std::string> outputArg("o", "output", "Full output file name - no extension will be added", true, "homer", "string");
-        cmd.add(outputArg);
-        
-        TCLAP::ValueArg<std::string> fileType("f", "filetype", "File type - e.g. chunkcounts or chunklengths - program will automatically detect gzipped files", true, "homer", "string");
-        cmd.add(fileType);
+  // parse command line args
 
-        //TCLAP::SwitchArg normaliseSwitch("a","normalise","normalise the copying matrix before printing (i.e. divide each row by its sum", cmd, false);
-        //cmd.add(normaliseSwitch);
+  try {
+    TCLAP::CmdLine cmd("Command description message", ' ', "0.1");
 
-        cmd.parse(argc, argv);
+    TCLAP::ValueArg<std::string> chromosomesToAnalyseArg(
+        "c", "chromosomes", "comma seperated list of chromosomes you want to analyse", true, "homer", "string");
+    cmd.add(chromosomesToAnalyseArg);
 
-        std::string chromosomesToAnalyseString = chromosomesToAnalyseArg.getValue();
-        std::string output = outputArg.getValue();
-        std::string prefix = prefixArg.getValue();
-        std::string filetype = fileType.getValue();
+    TCLAP::ValueArg<std::string> prefixArg("p", "prefix", "prefix of filenames you want to analuse", true, "homer",
+                                           "string");
+    cmd.add(prefixArg);
 
+    TCLAP::ValueArg<std::string> outputArg("o", "output", "Full output file name - no extension will be added", true,
+                                           "homer", "string");
+    cmd.add(outputArg);
 
-        std::vector chromosomesToAnalyseVector = split_string_to_vector(chromosomesToAnalyseString, ',');
+    TCLAP::ValueArg<std::string> fileType("f", "filetype",
+                                          "File type - e.g. chunkcounts or chunklengths - program will "
+                                          "automatically detect gzipped files",
+                                          true, "homer", "string");
+    cmd.add(fileType);
 
-        for (std::string i : chromosomesToAnalyseVector) {
-            std::string infile = prefix + '.' + i + '.' + filetype;
+    // TCLAP::SwitchArg normaliseSwitch("a","normalise","normalise the copying
+    // matrix before printing (i.e. divide each row by its sum", cmd, false);
+    // cmd.add(normaliseSwitch);
 
-            std::cout << infile << "\n";
-        }
+    cmd.parse(argc, argv);
 
-    } catch (TCLAP::ArgException &e)
-    { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
+    std::string chromosomesToAnalyseString = chromosomesToAnalyseArg.getValue();
+    std::string output = outputArg.getValue();
+    std::string prefix = prefixArg.getValue();
+    std::string filetype = fileType.getValue();
 
-    //Eigen::MatrixXd test = readMatrix("test.txt");     
-    //Eigen::MatrixXd test2 = readMatrix("test2.txt");
+    std::vector chromosomesToAnalyseVector = split_string_to_vector(chromosomesToAnalyseString, ',');
 
-    //std::cout << "test has " << test.rows() << " rows and " << test.cols() << " cols" << std::endl;
-    //std::cout << "test has " << test2.rows() << " rows and " << test2.cols() << " cols" << std::endl;
+    for (std::string i : chromosomesToAnalyseVector) {
+      std::string infile = prefix + '.' + i + '.' + filetype;
 
-    //Eigen::MatrixXd output = test + test2;
-    
-    // std::cout << output << std::endl;
+      std::cout << infile << "\n";
+    }
 
-    std::cout << "Success!\n";
+  } catch (TCLAP::ArgException &e) {
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+  }
 
-    return 0;
+  // Eigen::MatrixXd test = readMatrix("test.txt");
+  // Eigen::MatrixXd test2 = readMatrix("test2.txt");
+
+  // std::cout << "test has " << test.rows() << " rows and " << test.cols() << "
+  // cols" << std::endl; std::cout << "test has " << test2.rows() << " rows and
+  // " << test2.cols() << " cols" << std::endl;
+
+  // Eigen::MatrixXd output = test + test2;
+
+  // std::cout << output << std::endl;
+
+  std::cout << "Success!\n";
+
+  return 0;
 }
 
 Eigen::MatrixXd readMatrix(const char *filename) {
-    
-    int cols = 0, rows = 0;
-    double buff[MAXBUFSIZE];
 
-    std::ifstream infile;
-    infile.open(filename);
+  int cols = 0, rows = 0;
+  double buff[MAXBUFSIZE];
 
-    if(!infile.is_open()) {
-        std::cerr << "file doesn't exist\n";
-        std::exit;
-    } else {
-        std::cout << "file is open\n";
-    
-    }
+  std::ifstream infile;
+  infile.open(filename);
 
-    while (!infile.eof())  {
-        
-        std::string line;
-        std::getline(infile, line);
-        // std::cout << line << std::endl;
+  if (!infile.is_open()) {
+    std::cerr << "file doesn't exist\n";
+    std::exit;
+  } else {
+    std::cout << "file is open\n";
+  }
 
-        int temp_cols = 0;
-        std::stringstream stream(line);
-        
-        while(!stream.eof())
-            stream >> buff[cols*rows+temp_cols++];
+  while (!infile.eof()) {
 
-        if (temp_cols == 0)
-            continue;
+    std::string line;
+    std::getline(infile, line);
+    // std::cout << line << std::endl;
 
-        if (cols == 0)
-            cols = temp_cols;
+    int temp_cols = 0;
+    std::stringstream stream(line);
 
-        rows++;
-    }
+    while (!stream.eof())
+      stream >> buff[cols * rows + temp_cols++];
 
-    infile.close();
+    if (temp_cols == 0)
+      continue;
 
-    rows--;
+    if (cols == 0)
+      cols = temp_cols;
 
-    Eigen::MatrixXd result(rows,cols);
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < cols; j++)
-            result(i,j) = buff[ cols*i+j ];
+    rows++;
+  }
 
-    return result;
+  infile.close();
+
+  rows--;
+
+  Eigen::MatrixXd result(rows, cols);
+  for (int i = 0; i < rows; i++)
+    for (int j = 0; j < cols; j++)
+      result(i, j) = buff[cols * i + j];
+
+  return result;
 };
 
 std::vector<std::string> split_string_to_vector(std::string original, char separator) {
-    
-    std::vector<std::string> results;
-    std::string::const_iterator start = original.begin();
-    std::string::const_iterator end = original.end();
-    std::string::const_iterator next = std::find( start, end, separator );
-    while (next != end) {
-        results.push_back(std::string(start, next));
-        start = next + 1;
-        next = std::find(start, end, separator);
-    }
+
+  std::vector<std::string> results;
+  std::string::const_iterator start = original.begin();
+  std::string::const_iterator end = original.end();
+  std::string::const_iterator next = std::find(start, end, separator);
+  while (next != end) {
     results.push_back(std::string(start, next));
+    start = next + 1;
+    next = std::find(start, end, separator);
+  }
+  results.push_back(std::string(start, next));
 
-    //std::vector<double> results_double(results.size());
-    //std::transform(results.begin(), results.end(), results_double.begin(), [](const std::string& val) {
-    //    return std::stod(val);
-    //});
-    
-    return results;
+  // std::vector<double> results_double(results.size());
+  // std::transform(results.begin(), results.end(), results_double.begin(),
+  // [](const std::string& val) {
+  //     return std::stod(val);
+  // });
+
+  return results;
 }
-
