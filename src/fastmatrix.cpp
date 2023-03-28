@@ -10,7 +10,7 @@
 #define MAXBUFSIZE  ((int) 1e7)
 
 Eigen::MatrixXd readMatrix(const char *filename);
-std::vector<double> split_string_to_vector(std::string original, char separator);
+std::vector<std::string> split_string_to_vector(std::string original, char separator);
 
 int main(int argc, char *argv[]) {
     
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
         cmd.add(outputArg);
         
         TCLAP::ValueArg<std::string> fileType("f", "filetype", "File type - e.g. chunkcounts or chunklengths - program will automatically detect gzipped files", true, "homer", "string");
-
+        cmd.add(fileType);
 
         //TCLAP::SwitchArg normaliseSwitch("a","normalise","normalise the copying matrix before printing (i.e. divide each row by its sum", cmd, false);
         //cmd.add(normaliseSwitch);
@@ -38,24 +38,28 @@ int main(int argc, char *argv[]) {
 
         std::string chromosomesToAnalyseString = chromosomesToAnalyseArg.getValue();
         std::string output = outputArg.getValue();
-       
-        // get vector of chromosome names 
+        std::string prefix = prefixArg.getValue();
+        std::string filetype = fileType.getValue();
+
+
         std::vector chromosomesToAnalyseVector = split_string_to_vector(chromosomesToAnalyseString, ',');
-        
 
+        for (std::string i : chromosomesToAnalyseVector) {
+            std::string infile = prefix + '.' + i + '.' + filetype;
 
+            std::cout << infile << "\n";
+        }
 
     } catch (TCLAP::ArgException &e)
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
 
+    //Eigen::MatrixXd test = readMatrix("test.txt");     
+    //Eigen::MatrixXd test2 = readMatrix("test2.txt");
 
-    Eigen::MatrixXd test = readMatrix("test.txt");     
-    Eigen::MatrixXd test2 = readMatrix("test2.txt");
+    //std::cout << "test has " << test.rows() << " rows and " << test.cols() << " cols" << std::endl;
+    //std::cout << "test has " << test2.rows() << " rows and " << test2.cols() << " cols" << std::endl;
 
-    std::cout << "test has " << test.rows() << " rows and " << test.cols() << " cols" << std::endl;
-    std::cout << "test has " << test2.rows() << " rows and " << test2.cols() << " cols" << std::endl;
-
-    Eigen::MatrixXd output = test + test2;
+    //Eigen::MatrixXd output = test + test2;
     
     // std::cout << output << std::endl;
 
@@ -113,7 +117,7 @@ Eigen::MatrixXd readMatrix(const char *filename) {
     return result;
 };
 
-std::vector<double> split_string_to_vector(std::string original, char separator) {
+std::vector<std::string> split_string_to_vector(std::string original, char separator) {
     
     std::vector<std::string> results;
     std::string::const_iterator start = original.begin();
@@ -126,11 +130,11 @@ std::vector<double> split_string_to_vector(std::string original, char separator)
     }
     results.push_back(std::string(start, next));
 
-    std::vector<double> results_double(results.size());
-    std::transform(results.begin(), results.end(), results_double.begin(), [](const std::string& val) {
-        return std::stod(val);
-    });
+    //std::vector<double> results_double(results.size());
+    //std::transform(results.begin(), results.end(), results_double.begin(), [](const std::string& val) {
+    //    return std::stod(val);
+    //});
     
-    return results_double;
+    return results;
 }
 
