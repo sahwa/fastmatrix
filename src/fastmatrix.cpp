@@ -13,7 +13,19 @@ Eigen::MatrixXd readMatrix(const char *filename);
 
 int main(int argc, char *argv[]) {
     
-    using namespace std::literals::string_view_literals;
+    // parse command line args 
+    
+    try {
+        TCLAP::CmdLine cmd("Command description message", ' ', "0.9");
+        TCLAP::ValueArg<std::string> nameArg("n","name","Name to print",true,"homer","string");
+        cmd.add(nameArg);
+        TCLAP::SwitchArg reverseSwitch("r","reverse","Print name backwards", cmd, false);
+        cmd.parse(argc, argv);
+        std::string name = nameArg.getValue();
+        bool reverseName = reverseSwitch.getValue();
+    } catch (TCLAP::ArgException &e)
+    { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
+
 
     Eigen::MatrixXd test = readMatrix("test.txt");     
     Eigen::MatrixXd test2 = readMatrix("test2.txt");
