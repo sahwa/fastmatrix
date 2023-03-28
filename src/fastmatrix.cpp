@@ -2,15 +2,19 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <string_view>
 
-#include "/home/samm/projects/fastmatrix/include/eigen/Eigen/Dense"
+#include "tclap/CmdLine.h"
+#include "eigen/Eigen/Dense"
 
 #define MAXBUFSIZE  ((int) 1e7)
 
 Eigen::MatrixXd readMatrix(const char *filename);
 
-int main() {
- 
+int main(int argc, char *argv[]) {
+    
+    using namespace std::literals::string_view_literals;
+
     Eigen::MatrixXd test = readMatrix("test.txt");     
     Eigen::MatrixXd test2 = readMatrix("test2.txt");
 
