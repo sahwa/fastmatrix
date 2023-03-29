@@ -10,8 +10,6 @@
 
 int main(int argc, char *argv[]) {
 
-  // parse command line args
-
   try {
     TCLAP::CmdLine cmd("Command description message", ' ', "0.1");
 
@@ -60,7 +58,18 @@ int main(int argc, char *argv[]) {
     // now we want to read in the first file and use that as a base //
 
     std::string firstFilePath = prefix + chromosomesToAnalyseVector[0] + '.' + filetype;
+    
+    if (isGzip(firstFilePath) == -1) {
+      std::cout << "file is unzipped\n";
+      Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
+    } else {
+      std::cout << "file is gzipped\n";
+      Eigen::MatrixXd firstFile = readMatrixGzip(firstFilePath);
+    }
+    
     Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
+    
+    
     int ff_rows = firstFile.rows();
     int ff_cols = firstFile.cols();
 
@@ -98,7 +107,6 @@ int main(int argc, char *argv[]) {
   }
 
   std::cout << "Success!\n";
-
   return 0;
 }
 
@@ -181,3 +189,11 @@ int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
 
   return 0;
 }
+
+int isGzipped(std::string filename) {
+  std::string::size_type iszip = filename.find(".gz");
+  return iszip;
+}
+
+  
+

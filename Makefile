@@ -3,8 +3,8 @@ CXX=g++
 IDIR=include
 CFLAGS=-I$(IDIR)
 
-_DEPS = Eigen/Dense
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+#_DEPS = Eigen/Dense fastmatrix.h 
+#DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = fastmatrix.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
