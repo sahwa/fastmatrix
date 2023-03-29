@@ -1,7 +1,7 @@
 CXX=g++
 
 IDIR=include
-CFLAGS=-I$(IDIR)
+CFLAGS=-I$(IDIR) -I/home/samm/miniconda3/include -I/home/samm/projects/fastmatrix/fastmatrix/include/gzstream
 
 #_DEPS = Eigen/Dense fastmatrix.h 
 #DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
