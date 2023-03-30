@@ -59,20 +59,18 @@ int main(int argc, char *argv[]) {
     // now we want to read in the first file and use that as a base //
 
     std::string firstFilePath = prefix + chromosomesToAnalyseVector[0] + '.' + filetype;
-    const char * firstFilePathChar = firstFilePath.c_str();
-
+    const char *firstFilePathChar = firstFilePath.c_str();
 
     if (isGzipped(firstFilePathChar) == -1) {
       std::cout << "file is unzipped\n";
       Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
     } else {
       std::cout << "file is gzipped\n";
-      //Eigen::MatrixXd firstFile = readMatrixGzip(firstFilePath);
+      // Eigen::MatrixXd firstFile = readMatrixGzip(firstFilePath);
     }
-    
+
     Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
-    
-    
+
     int ff_rows = firstFile.rows();
     int ff_cols = firstFile.cols();
 
@@ -161,8 +159,8 @@ Eigen::MatrixXd readMatrix(std::string filename) {
   return result;
 };
 
-void readMatrixgz(const char* filename) {
-  
+void readMatrixgz(const char *filename) {
+
   int cols = 0, rows = 0;
   double buff[MAXBUFSIZE];
 
@@ -210,6 +208,3 @@ int isGzipped(std::string filename) {
   std::string::size_type iszip = filename.find(".gz");
   return iszip;
 }
-
-  
-
