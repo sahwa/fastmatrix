@@ -4,7 +4,7 @@
 #include <string_view>
 #include <vector>
 
-#include "eigen/Eigen/Dense"
+#include "../include/eigen/Eigen/Dense"
 #include "fastmatrix.h"
 #include "tclap/CmdLine.h"
 #include "gzstream.h"
