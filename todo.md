@@ -1,4 +1,4 @@
 - [x] Add in capacity to read and write .gz files
 - [ ] Option to normalise rows by their sum
-- [ ] Check that gzstream is open and readable
+- [x] Check that gzstream is open and readable 
 - [ ] Find out way to preserve row and column names (or even better to add in new informative sample names rather than IND* produced by PBWT-paint)
