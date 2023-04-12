@@ -248,7 +248,6 @@ int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
 
   std::ofstream file(filename);
   const static Eigen::IOFormat sepFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, " ", "\n", "", "", "", "");
-  
 
   if (!file.is_open()) {
     std::cout << "Cannot open output file connection\n";
