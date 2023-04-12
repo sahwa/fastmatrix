@@ -7,10 +7,11 @@
 #include "eigen/Eigen/Dense"
 #include "fastmatrix.h"
 #include "tclap/CmdLine.h"
-#include <gzstream.h>
+#include "gzstream.h"
 
 int main(int argc, char *argv[]) {
-
+  
+    igzstream in(argv[1]);
   try {
     TCLAP::CmdLine cmd("Command description message", ' ', "0.1");
 
@@ -58,16 +59,20 @@ int main(int argc, char *argv[]) {
 
     // now we want to read in the first file and use that as a base //
 
+    //std::cout << "first path is: " << firstFilePath << "\n";
+
     std::string firstFilePath = prefix + chromosomesToAnalyseVector[0] + '.' + filetype;
     const char *firstFilePathChar = firstFilePath.c_str();
 
-    if (isGzipped(firstFilePathChar) == -1) {
-      std::cout << "file is unzipped\n";
-      Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
-    } else {
-      std::cout << "file is gzipped\n";
+    std::cout << "first path is: " << firstFilePath << "\n";
+
+    //if (isGzipped(firstFilePathChar) == -1) {
+    //  std::cout << "file is unzipped\n";
+    //  Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
+    //} else {
+    //  std::cout << "file is gzipped\n";
       // Eigen::MatrixXd firstFile = readMatrixGzip(firstFilePath);
-    }
+    //}
 
     Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
 
@@ -114,7 +119,7 @@ int main(int argc, char *argv[]) {
 Eigen::MatrixXd readMatrix(std::string filename) {
 
   int cols = 0, rows = 0;
-  double buff[MAXBUFSIZE];
+  std::vector<double> buff(MAXBUFSIZE);
 
   std::ifstream infile;
   infile.open(filename);
@@ -157,6 +162,7 @@ Eigen::MatrixXd readMatrix(std::string filename) {
       result(i, j) = buff[cols * i + j];
 
   return result;
+
 };
 
 void readMatrixgz(const char *filename) {
@@ -165,11 +171,11 @@ void readMatrixgz(const char *filename) {
   double buff[MAXBUFSIZE];
 
   igzstream in(filename);
-  std::string line;
+//  std::string line;
 
-  while (getline(in, line)) {
-    std::cout << line << std::endl;
-  }
+//  while (getline(in, line)) {
+//    std::cout << line << std::endl;
+//  }
 }
 
 std::vector<std::string> split_string_to_vector(std::string original, char separator) {

@@ -1,7 +1,7 @@
 CXX=g++
 
-IDIR=include
-CFLAGS=-I$(IDIR) -I/home/samm/miniconda3/include -I/home/samm/projects/fastmatrix/fastmatrix/include/gzstream
+IDIR=include 
+CFLAGS=-I$(IDIR) -I include/gzstream/ -I /usr/include -I /usr/include/ -L include/gzstream/ -l gzstream -lm -lz
 
 #_DEPS = Eigen/Dense fastmatrix.h 
 #DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -18,7 +18,7 @@ ODIR=obj
 $(ODIR)/%.o: $(SRC)/%.cpp $(DEPS)
 	$(CXX) -c -o $@ $< $(CFLAGS)
 
-$(BIN)/fastmatrix: $(OBJ)
+$(BIN)/fastmatrix: $(OBJ) 
 	$(CXX) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean

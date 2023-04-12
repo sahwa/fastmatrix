@@ -1,3 +1,0 @@
-fm=../src/fastmatrix
-
-${fm} 
