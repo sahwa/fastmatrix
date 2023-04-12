@@ -88,10 +88,22 @@ int main(int argc, char *argv[]) {
     chromosomesToAnalyseVector.erase(chromosomesToAnalyseVector.begin());
 
     for (std::string i : chromosomesToAnalyseVector) {
+    
       std::string infile = prefix + i + '.' + filetype;
+      const char* infilechar = infile.c_str();      
+
       std::cout << "Processing infile: " << infile << "\n";
 
-      Eigen::MatrixXd current = readMatrix(infile);
+      Eigen::MatrixXd current;
+
+      if (isGzipped(firstFilePath) == -1) {
+        std::cout << "file is unzipped\n";
+        current = readMatrix(infile);
+      } else {
+        std::cout << "file is gzipped\n";
+        current = readMatrixgz(infilechar);
+      }
+      
 
       int current_rows = current.rows();
       int current_cols = current.cols();
@@ -242,7 +254,7 @@ int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
     return 0;
   }
 
-  file << "Writing output to file\n" << MatrixOutput << '\n';
+  file << MatrixOutput << '\n';
 
   return 0;
 }
