@@ -187,12 +187,12 @@ Eigen::MatrixXd readMatrixgz(const char *filename) {
   igzstream infile;
   infile.open(filename);
 
-  //  if (!infile.is_open()) {
-  //    std::cerr << "file doesn't exist\n";
-  //    std::exit;
-  //  } else {
-  //    std::cout << "file is open\n";
-  //  }
+  if (!infile.good()) {
+    std::cerr << "file doesn't exist\n";
+    std::exit;
+  } else {
+    std::cout << "file is open\n";
+  }
 
   while (!infile.eof()) {
 
