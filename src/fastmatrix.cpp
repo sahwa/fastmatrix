@@ -88,9 +88,9 @@ int main(int argc, char *argv[]) {
     chromosomesToAnalyseVector.erase(chromosomesToAnalyseVector.begin());
 
     for (std::string i : chromosomesToAnalyseVector) {
-    
+
       std::string infile = prefix + i + '.' + filetype;
-      const char* infilechar = infile.c_str();      
+      const char *infilechar = infile.c_str();
 
       std::cout << "Processing infile: " << infile << "\n";
 
@@ -103,7 +103,6 @@ int main(int argc, char *argv[]) {
         std::cout << "file is gzipped\n";
         current = readMatrixgz(infilechar);
       }
-      
 
       int current_rows = current.rows();
       int current_cols = current.cols();
