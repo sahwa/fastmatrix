@@ -10,6 +10,7 @@ To run and use simply:
 git clone https://github.com/sahwa/fastmatrix
 cd fastmatrix
 make 
+```
 
 Usage:
 
