@@ -9,4 +9,4 @@ Eigen::MatrixXd readMatrix(std::string filename);
 
 std::vector<std::string> split_string_to_vector(std::string original, char separator);
 
-int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename);
+void writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename);
