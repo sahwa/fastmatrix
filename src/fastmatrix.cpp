@@ -6,12 +6,13 @@
 
 #include "../include/eigen/Eigen/Dense"
 #include "fastmatrix.h"
-#include "tclap/CmdLine.h"
 #include "gzstream.h"
+#include "tclap/CmdLine.h"
 
 int main(int argc, char *argv[]) {
-  
-    igzstream in(argv[1]);
+
+  // setup arguments in try catch
+
   try {
     TCLAP::CmdLine cmd("Command description message", ' ', "0.1");
 
@@ -39,6 +40,7 @@ int main(int argc, char *argv[]) {
 
     cmd.parse(argc, argv);
 
+    // assign arguments to variables
     std::string chromosomesToAnalyseString = chromosomesToAnalyseArg.getValue();
     std::string output = outputArg.getValue();
     std::string prefix = prefixArg.getValue();
@@ -50,6 +52,7 @@ int main(int argc, char *argv[]) {
 
     int n_chr = chromosomesToAnalyseVector.size();
 
+    // no point summing chromosomes when there's only one!
     if (n_chr == 1) {
       std::cerr << "You have only supplied a single chromosome! Exiting...\n";
       return 0;
@@ -59,22 +62,25 @@ int main(int argc, char *argv[]) {
 
     // now we want to read in the first file and use that as a base //
 
-    //std::cout << "first path is: " << firstFilePath << "\n";
-
     std::string firstFilePath = prefix + chromosomesToAnalyseVector[0] + '.' + filetype;
+    std::cout << "first path is: " << firstFilePath << "\n";
+
     const char *firstFilePathChar = firstFilePath.c_str();
 
     std::cout << "first path is: " << firstFilePath << "\n";
 
-    //if (isGzipped(firstFilePathChar) == -1) {
-    //  std::cout << "file is unzipped\n";
-    //  Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
-    //} else {
-    //  std::cout << "file is gzipped\n";
-      // Eigen::MatrixXd firstFile = readMatrixGzip(firstFilePath);
-    //}
+    // check whether the file is zipped or not (based on postfix) //
 
-    Eigen::MatrixXd firstFile = readMatrix(firstFilePath);
+    Eigen::MatrixXd firstFile;
+    
+    if (isGzipped(firstFilePath) == -1) {
+      std::cout << "file is unzipped\n";
+      firstFile = readMatrix(firstFilePath);
+    } else {
+      std::cout << "file is gzipped\n";
+      firstFile = readMatrixgz(firstFilePathChar);
+    }    
+
 
     int ff_rows = firstFile.rows();
     int ff_cols = firstFile.cols();
@@ -135,7 +141,6 @@ Eigen::MatrixXd readMatrix(std::string filename) {
 
     std::string line;
     std::getline(infile, line);
-    // std::cout << line << std::endl;
 
     int temp_cols = 0;
     std::stringstream stream(line);
@@ -162,20 +167,54 @@ Eigen::MatrixXd readMatrix(std::string filename) {
       result(i, j) = buff[cols * i + j];
 
   return result;
+}
 
-};
-
-void readMatrixgz(const char *filename) {
+Eigen::MatrixXd readMatrixgz(const char *filename) {
 
   int cols = 0, rows = 0;
-  double buff[MAXBUFSIZE];
+  std::vector<double> buff(MAXBUFSIZE);
 
-  igzstream in(filename);
-//  std::string line;
+  igzstream infile;
+  infile.open(filename);
 
-//  while (getline(in, line)) {
-//    std::cout << line << std::endl;
+
+//  if (!infile.is_open()) {
+//    std::cerr << "file doesn't exist\n";
+//    std::exit;
+//  } else {
+//    std::cout << "file is open\n";
 //  }
+
+  while (!infile.eof()) {
+
+    std::string line;
+    std::getline(infile, line);
+
+    int temp_cols = 0;
+    std::stringstream stream(line);
+
+    while (!stream.eof())
+      stream >> buff[cols * rows + temp_cols++];
+
+    if (temp_cols == 0)
+      continue;
+
+    if (cols == 0)
+      cols = temp_cols;
+
+    rows++;
+  }
+
+  infile.close();
+
+  rows--;
+
+  Eigen::MatrixXd result(rows, cols);
+  for (int i = 0; i < rows; i++)
+    for (int j = 0; j < cols; j++)
+      result(i, j) = buff[cols * i + j];
+
+  return result;
 }
 
 std::vector<std::string> split_string_to_vector(std::string original, char separator) {
