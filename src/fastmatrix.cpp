@@ -247,13 +247,15 @@ std::vector<std::string> split_string_to_vector(std::string original, char separ
 int writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
 
   std::ofstream file(filename);
+  const static Eigen::IOFormat sepFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, " ", "\n", "", "", "", "");
+  
 
   if (!file.is_open()) {
     std::cout << "Cannot open output file connection\n";
     return 0;
   }
 
-  file << MatrixOutput << '\n';
+  file << MatrixOutput.format(sepFormat) << '\n';
 
   return 0;
 }
