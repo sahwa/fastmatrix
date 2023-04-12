@@ -72,15 +72,14 @@ int main(int argc, char *argv[]) {
     // check whether the file is zipped or not (based on postfix) //
 
     Eigen::MatrixXd firstFile;
-    
+
     if (isGzipped(firstFilePath) == -1) {
       std::cout << "file is unzipped\n";
       firstFile = readMatrix(firstFilePath);
     } else {
       std::cout << "file is gzipped\n";
       firstFile = readMatrixgz(firstFilePathChar);
-    }    
-
+    }
 
     int ff_rows = firstFile.rows();
     int ff_cols = firstFile.cols();
@@ -177,13 +176,12 @@ Eigen::MatrixXd readMatrixgz(const char *filename) {
   igzstream infile;
   infile.open(filename);
 
-
-//  if (!infile.is_open()) {
-//    std::cerr << "file doesn't exist\n";
-//    std::exit;
-//  } else {
-//    std::cout << "file is open\n";
-//  }
+  //  if (!infile.is_open()) {
+  //    std::cerr << "file doesn't exist\n";
+  //    std::exit;
+  //  } else {
+  //    std::cout << "file is open\n";
+  //  }
 
   while (!infile.eof()) {
 
