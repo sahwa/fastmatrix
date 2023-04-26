@@ -1,7 +1,7 @@
 CXX=g++
 
 IDIR=include 
-CFLAGS=-I$(IDIR) -I include/gzstream/ -I /usr/include -I /usr/include/ -L include/gzstream/ -l gzstream -lm -lz
+CFLAGS=-I$(IDIR) -I include/gzstream/ -I /usr/include -L include/gzstream/ -lgzstream -lm -lz
 
 #_DEPS = Eigen/Dense fastmatrix.h 
 #DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
