@@ -155,7 +155,7 @@ Eigen::MatrixXd readMatrix(std::string filename) {
 
   rows--;
 
-  Eigen::MatrixXd result(rows - 1, cols - 1);
+  Eigen::MatrixXd result(rows, cols);
   for (int i = 0; i < rows; i++)
     for (int j = 0; j < cols; j++)
       result(i, j) = buff[cols * i + j];
@@ -238,7 +238,6 @@ void writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
     std::cout << "Cannot open output file connection\n";
   }
 
-  file << "test";
   file << MatrixOutput.format(sepFormat) << '\n';
 }
 
