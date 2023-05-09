@@ -20,14 +20,15 @@ int main(int argc, char *argv[]) {
                                            "homer", "string");
     cmd.add(outputArg);
 
-    TCLAP::ValueArg<std::string> fileList("f", "filelist", "List of files to merge, seperated by commas", "true", "homer", "string");
+    TCLAP::ValueArg<std::string> fileList("f", "filelist", "List of files to merge, seperated by commas", "true",
+                                          "homer", "string");
     cmd.add(fileList);
 
     cmd.parse(argc, argv);
 
     // assign arguments to variables
     std::string output = outputArg.getValue();
-    
+
     std::vector filesToAnalyseVector = split_string_to_vector(fileList, ',');
 
     // run some checks here //
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]) {
     // now we want to read in the first file and use that as a base //
 
     std::string firstFilePath = filesToAnalyseVector[0];
-    
+
     std::cout << "first path is: " << firstFilePath << "\n";
 
     const char *firstFilePathChar = firstFilePath.c_str();
@@ -155,8 +156,8 @@ Eigen::MatrixXd readMatrix(std::string filename) {
   rows--;
 
   Eigen::MatrixXd result(rows - 1, cols - 1);
-  for (int i = 1; i < rows; i++)
-    for (int j = 1; j < cols; j++)
+  for (int i = 0; i < rows; i++)
+    for (int j = 0; j < cols; j++)
       result(i, j) = buff[cols * i + j];
 
   return result;
