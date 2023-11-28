@@ -211,22 +211,14 @@ Eigen::MatrixXd readMatrixgz(const char *filename) {
   return result;
 }
 
-std::vector<std::string> split_string_to_vector(std::string original, char separator) {
-
-  std::vector<std::string> results;
-  std::string::const_iterator start = original.begin();
-  std::string::const_iterator end = original.end();
-  std::string::const_iterator next = std::find(start, end, separator);
-
-  while (next != end) {
-    results.push_back(std::string(start, next));
-    start = next + 1;
-    next = std::find(start, end, separator);
-  }
-
-  results.push_back(std::string(start, next));
-
-  return results;
+std::vector<std::string> split_string_to_vector(const std::string& original, char separator) {
+    std::vector<std::string> results;
+    std::stringstream ss(original);
+    std::string item;
+    while (std::getline(ss, item, separator)) {
+        results.push_back(item);
+    }
+    return results;
 }
 
 bool writeMatrixOutput(const Eigen::MatrixXd& matrixOutput, const std::string& filename) {
