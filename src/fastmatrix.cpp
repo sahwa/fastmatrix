@@ -229,19 +229,19 @@ std::vector<std::string> split_string_to_vector(std::string original, char separ
   return results;
 }
 
-void writeMatrixOutput(Eigen::MatrixXd MatrixOutput, std::string filename) {
-
-  std::ofstream file(filename);
-  const static Eigen::IOFormat sepFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, " ", "\n", "", "", "", "");
-
-  if (!file.is_open()) {
-    std::cout << "Cannot open output file connection\n";
-  }
-
-  file << MatrixOutput.format(sepFormat) << '\n';
-}
-
-int isGzipped(std::string filename) {
-  std::string::size_type iszip = filename.find(".gz");
-  return iszip;
+bool writeMatrixOutput(const Eigen::MatrixXd& matrixOutput, const std::string& filename) {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Cannot open output file: " << filename << "\n";
+        return false;
+    }
+    const static Eigen::IOFormat sepFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, " ", "\n", "", "", "", "");
+    file << matrixOutput.format(sepFormat) << '\n';
+    if (!file) {  // Checks if the write operation was successful
+        std::cerr << "Failed to write to the file: " << filename << "\n";
+        file.close();
+        return false;
+    }
+    file.close();
+    return true;
 }
